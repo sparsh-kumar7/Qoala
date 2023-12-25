@@ -56,3 +56,8 @@ Welcome to the Thai ID OCR App, a Django-based application that performs Optical
 1. Error handling for unreadable or unclear ID cards.
 2. Code comments for better understanding.
 
+# Snapshots
+<img width="1440" alt="Screenshot 2023-12-26 at 4 25 28 AM" src="https://github.com/sparsh-kumar7/Qoala/assets/85250933/a9ffb7c0-caf8-43a8-b500-5fc3a0506cff">
+<img width="1440" alt="Screenshot 2023-12-26 at 4 29 08 AM" src="https://github.com/sparsh-kumar7/Qoala/assets/85250933/e0c51f9e-9c61-475c-b9d4-bec99bfc28a0">
+
+
