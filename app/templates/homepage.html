@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thai ID OCR App</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #001f3f; /* Navy blue background */
+            color: #fff; /* White text */
+        }
+
+        .container {
+            background-color: #003366; /* Dark blue container background */
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1, h2 {
+            color: #ff9900; /* Orange headings */
+        }
+
+        .custom-file-input {
+            background-color: #004080; /* Dark blue file input background */
+            color: #fff; /* White text */
+        }
+
+        .custom-file-label::after {
+            background-color: #ff6600; /* Orange file label background */
+            color: #fff; /* White text */
+        }
+
+        .btn-primary {
+            background-color: #ff9900 !important; /* Orange button */
+            border-color: #ff9900 !important;
+        }
+        #jsonOutput {
+            background-color: #004080; /* Dark blue JSON output background */
+            color: #fff; /* White text */
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #fileSizeWarning, #errorModal, #successModal {
+            color: #ff3300; /* Red warning text */
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        .modal{
+            color:black;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container mt-5">
+        <h1 class="mb-4">Thai ID OCR App</h1>
+
+        <!-- Max File Size Warning -->
+        <p id="fileSizeWarning">Max file size allowed is 2MB</p>
+        
+        <!-- Upload Image Form -->
+        <form id="ocrForm" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="custom-file mb-3">
+                <input type="file" class="custom-file-input" id="imageInput" name="image" accept=".png, .jpg, .jpeg" onchange="validateFileSize()">
+                <label class="custom-file-label" for="imageInput" id="fileInputLabel">Choose file</label>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="submitForm()">Submit</button>
+        </form>
+        <script>
+            document.getElementById('imageInput').addEventListener('change', function() {
+                var fileName = this.value.split('\\').pop(); // Extract the file name
+                document.getElementById('fileInputLabel').innerHTML = fileName; // Update the label with the file name
+            });
+        </script>
+
+        <!-- OCR Results -->
+<div id="ocrResults" class="mt-4">
+    <h2>OCR Results</h2>
+    <!-- Add search input field and button -->
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" id="searchInput" placeholder="Search by ID">
+        {% csrf_token %}
+        <div class="input-group-append">
+            <button class="btn btn-primary" type="button" onclick="searchById()">Search</button>
+        </div>
+    </div>
+    <div id="resultList"></div>
+</div>
+
+<!-- Search Result Dialog -->
+<div class="modal" id="searchResultModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Search Result</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Update Form -->
+                <form id="updateForm">
+                    <div class="form-group">
+                        <label for="idNumber">ID Number:</label>
+                        <input type="text" class="form-control" id="identification_number" name="identification_number" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="firstName">First Name:</label>
+                        <input type="text" class="form-control" id="name" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name:</label>
+                        <input type="text" class="form-control" id="last_name" name="last_name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dob">DOB:</label>
+                        <input type="date" class="form-control" id="date_of_birth" name="date_of_birth" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfIssue">Date of Issue:</label>
+                        <input type="date" class="form-control" id="date_of_issue" name="date_of_issue" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dateOfExpiry">Date of Expiry:</label>
+                        <input type="date" class="form-control" id="date_of_expiry" name="date_of_expiry" required>
+                    </div>
+                </form>
+                <!-- End Update Form -->
+
+                <!-- Display the search result -->
+                <div id="searchResultContent"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitUpdateForm()">Update</button>
+                <button type="button" class="btn btn-danger" onclick="deleteResult()">Delete</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    </div>
+
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Success</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>OCR process successful!</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        function validateFileSize() {
+            var input = document.getElementById('imageInput');
+            var warning = document.getElementById('fileSizeWarning');
+            if (input.files.length > 0) {
+                var fileSize = input.files[0].size / 1024 / 1024; // Convert to MB
+                if (fileSize > 2) {
+                    warning.style.display = 'block';
+                    input.value = ''; // Clear the selected file
+                } else {
+                    warning.style.display = 'none';
+                }
+            }
+        }
+
+        function submitForm() {
+            var input = document.getElementById('imageInput');
+            var warning = document.getElementById('fileSizeWarning');
+
+            if (input.files.length > 0) {
+                var fileSize = input.files[0].size / 1024 / 1024; // Convert to MB
+                if (fileSize > 2) {
+                    warning.style.display = 'block';
+                    showErrorModal('File size exceeds 2MB. Please choose a smaller file.');
+                    return;
+                }
+            }
+
+            warning.style.display = 'none';
+
+            var form = document.getElementById('ocrForm');
+            var formData = new FormData(form);
+
+            fetch('/post/', {
+                method: 'POST',
+                body: formData,
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('OCR process failed.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                displayResult(data);
+                showSuccessModal();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showErrorModal('An error occurred during OCR process. Please try again.');
+            });
+        }
+
+        function displayResult(data) {
+            var resultList = document.getElementById('resultList');
+            var resultDiv = document.createElement('div');
+            resultDiv.innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            resultList.appendChild(resultDiv);
+        }
+
+        function showErrorModal(errorMessage) {
+            var modal = new bootstrap.Modal(document.getElementById('errorModal'));
+            document.getElementById('errorMessage').innerText = errorMessage;
+            modal.show();
+        }
+
+        function showSuccessModal() {
+            var modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+        }
+
+        function searchById() {
+            id = document.getElementById("searchInput").value;
+            fetch('/get/'+id, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Search request failed.');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('identification_number').innerHTML = data[0].identification_number;
+                var modal = new bootstrap.Modal(document.getElementById('searchResultModal'));
+        var searchResultContent = document.getElementById('searchResultContent');
+        
+        // Replace this with your actual search result content
+        var resultHtml = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+        searchResultContent.innerHTML = resultHtml;
+
+        // Open the modal with the update form
+        modal.show();
+    })}
+
+
+        function deleteResult() {
+        var modal = new bootstrap.Modal(document.getElementById('searchResultModal'));
+        var searchResultContent = document.getElementById('searchResultContent');
+        id = document.getElementById("searchInput").value;
+        // Replace 'your_django_delete_endpoint' with your actual Django delete API endpoint
+        fetch('/delete/' + id + '/', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Delete request failed.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful deletion response
+            console.log('Delete successful:', data);
+            modal.hide(); // Close the modal after deletion
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle error response
+        });
+    }
+
+
+
+
+   
+
+    function submitUpdateForm() {
+        var updateForm = document.getElementById('updateForm');
+        var formData = new FormData(updateForm);
+        id = document.getElementById("searchInput").value;
+        fetch('/update/' + id + '/', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Update request failed.');
+            }
+            return response.json();
+        })
+        .then(data => {
+            // Handle successful update response
+            console.log('Update successful:', data);
+            modal.hide(); // Close the modal after updating
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Handle error response
+        });
+
+    }
+
+    </script>
+
+</body>
+</html>
