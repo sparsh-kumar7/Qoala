@@ -53,23 +53,6 @@
         .modal{
             color:black;
         }
-        
-        pre {
-            display: block;
-            font-size: 87.5%;
-            color:#fff;
-        }
-
-        .modal-body{
-            background-color: #2b5783;
-        }
-        .modal-header{
-            background-color: #004080;
-        }
-        .modal-footer{
-            background-color: #004080;
-        }
-
     </style>
 </head>
 <body>
@@ -280,7 +263,7 @@
                 var modal = new bootstrap.Modal(document.getElementById('searchResultModal'));
         var searchResultContent = document.getElementById('searchResultContent');
         
-        // Replace this with your actual search result content
+        
         var resultHtml = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
         searchResultContent.innerHTML = resultHtml;
 
@@ -293,7 +276,7 @@
         var modal = new bootstrap.Modal(document.getElementById('searchResultModal'));
         var searchResultContent = document.getElementById('searchResultContent');
         id = document.getElementById("searchInput").value;
-        // Replace 'your_django_delete_endpoint' with your actual Django delete API endpoint
+        // adding api endpoints
         fetch('/delete/' + id + '/', {
             method: 'DELETE',
             headers: {
