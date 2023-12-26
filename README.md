@@ -25,6 +25,7 @@ Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
    python -m venv .venv
    ```
 3. Start Virtual Environment:
+
    For macOS:
    ```
    source venv/bin/activate
