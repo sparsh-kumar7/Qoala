@@ -22,7 +22,7 @@ Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
    brew install tesseract
    ```
    For Windows :
-   Download the installer for tesseract from the following link and use windows install wizard to install:
+   Download the installer for tesseract from the following link and use windows install wizard to install.
    ```
    https://github.com/UB-Mannheim/tesseract/wiki
    ```
@@ -78,10 +78,29 @@ Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
 <img width="1440" alt="Screenshot 2023-12-26 at 11 49 10 AM" src="https://github.com/sparsh-kumar7/Qoala/assets/85250933/79f78f48-c823-4c32-ab36-21bdf1103f84">
 
 The following steps occurred during image processing.
-![temp inverted](https://github.com/sparsh-kumar7/Qoala/assets/85250933/600fab31-00bc-4a4f-b034-1bfcefd3bef8)
-![temp gray_inv](https://github.com/sparsh-kumar7/Qoala/assets/85250933/f4ebe66c-cda0-46c8-af99-f48457307023)
-![temp bw_image](https://github.com/sparsh-kumar7/Qoala/assets/85250933/e8152afb-f473-49a7-be2f-af53f5502dcb)
-![temp image_with_border](https://github.com/sparsh-kumar7/Qoala/assets/85250933/58517dbd-647f-44e4-a424-76420a551ba3)
+1. Inverted the image.
+
+![PHOTO-2023-12-27-01-05-56](https://github.com/sparsh-kumar7/Qoala/assets/85250933/bd34bcd8-7e63-40e9-a366-8af296c7b6da)
+
+
+2. Greyscaled the image.
+
+![PHOTO-2023-12-27-01-05-56](https://github.com/sparsh-kumar7/Qoala/assets/85250933/086f5b2f-0278-4cb0-97c4-49ff3b86f670)
+
+
+3. Changed it to black and white using thresholding.
+
+![PHOTO-2023-12-27-01-05-55](https://github.com/sparsh-kumar7/Qoala/assets/85250933/95830a82-dc5f-4337-8463-c7acdae101bf)
+
+
+4. Reinverted the image.
+
+![PHOTO-2023-12-27-01-05-55](https://github.com/sparsh-kumar7/Qoala/assets/85250933/a3c60d41-1ea1-4def-a02a-c9b669e896c0)
+
+
+5. Added border to read corner texts.
+
+![PHOTO-2023-12-27-01-05-56](https://github.com/sparsh-kumar7/Qoala/assets/85250933/1d35914d-6922-4f4b-b2bc-4600787e0d87)
 
 
 
