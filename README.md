@@ -16,7 +16,7 @@ Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
 # Setup Instructions
 1. Clone the repository:
    ```
-   git clone <[repository_url](https://github.com/sparsh-kumar7/Qoala)https://github.com/sparsh-kumar7/Qoala>
+   git clone <https://github.com/sparsh-kumar7/Qoala)https://github.com/sparsh-kumar7/Qoala>
    cd thai-id-ocr-app
 
    ```
@@ -24,25 +24,27 @@ Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
    ```
    python -m venv .venv
    ```
-3. Start Virtual Environment (macOS & windows):
+3. Start Virtual Environment:
+   For macOS:
    ```
    source venv/bin/activate
    ```
-   ```
+   For Windows:
+    ```
    venv\Scripts\activate
 
    ```
-4. Install dependencies:
+5. Install dependencies:
    ```
    pip install -r requirements.txt
 
    ```
-5. Run migrations:
+6. Run migrations:
    ```
    python manage.py migrate
 
    ```
-6. Start the Django development server:
+7. Start the Django development server:
    ```
    python manage.py runserver
 
