@@ -3,8 +3,8 @@
 # Overview
 Welcome to the Thai ID OCR App, a Django-based application that performs Optical Character Recognition (OCR) on Thai ID card images. PyTesseract is used for OCR, and OpenCV is employed for image preprocessing to enhance readability. The application allows users to extract information from Thai ID cards, save the results in a database, and perform operations such as updating or deleting stored ID cards.
 
-#Link 
-
+# Link 
+Correctly Hosted Working LINK : https://ocr-thai-production-7e36.up.railway.app/
 
 # Technologies Used
 1. Django for web application development
